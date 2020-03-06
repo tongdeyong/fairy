@@ -1,0 +1,21 @@
+package ${packageName}.${module}.vo;
+
+import lombok.Data;
+
+@Data
+public class ${ClassName}VO {
+
+    private Integer pageNum = 1;
+
+    private Integer pageSize = 10;
+
+    #foreach($column in $columns)
+    #if($column.attributeName!="id" && $column.type!="Date")
+    /**
+     * $column.comment
+     */
+    private $column.type $column.attributeName;
+    #end
+    #end
+}
+

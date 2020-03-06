@@ -1,0 +1,22 @@
+package ${packageName}.${module}.service;
+
+import ${packageName}.${module}.vo.${ClassName}VO;
+import ${packageName}.${module}.model.${ClassName};
+
+import java.util.List;
+
+public interface ${ClassName}Service {
+
+    ${ClassName} findById(Integer id);
+
+    List<${ClassName}> findByCondition(${ClassName}VO ${className}VO);
+
+    void save(${ClassName} user);
+
+    void update(${ClassName} user);
+
+    void deleteById(Integer id);
+
+    List<${ClassName}> findAll(${ClassName}VO ${className}VO);
+
+}

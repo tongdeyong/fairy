@@ -1,0 +1,20 @@
+package ${packageName}.${module}.dao;
+
+import ${packageName}.${module}.vo.${ClassName}VO;
+import ${packageName}.${module}.model.${ClassName};
+
+import java.util.List;
+
+public interface ${ClassName}Dao {
+
+    ${ClassName} findById(Integer id);
+
+    List<${ClassName}> findByCondition(${ClassName}VO ${className}VO);
+
+    void save(${ClassName} user);
+
+    int update(${ClassName} user);
+
+    int deleteById(Integer id);
+
+}

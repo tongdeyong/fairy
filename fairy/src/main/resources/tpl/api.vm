@@ -1,0 +1,7 @@
+import request from '@/utils/request'
+
+export const list = params => request.get('/${module}/${className}/list', { params })
+export const allList = params => request.get('/${module}/${className}/all-list', { params })
+export const add = params => request.post('/${module}/${className}/save', params)
+export const update = params => request.post('/${module}/${className}/update', params)
+export const remove = params => request.post(`/${module}/${className}/delete/${params.id}`)

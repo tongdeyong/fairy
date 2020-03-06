@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fairy.system.dao.SysFeVersionDao">
+
+    <select id="findById" parameterType="java.lang.Integer" resultType="com.fairy.system.model.SysFeVersion">
+		select *
+		from sys_fe_version
+		where id = #{id}
+	</select>
+
+    <select id="findByCondition" parameterType="com.fairy.system.vo.SysFeVersionVO"
+            resultType="com.fairy.system.model.SysFeVersion">
+        select *
+        from
+        sys_fe_version
+        <where>
+            <if test="id != null">and id = #{id}</if>
+            <if test="feVersion != null and feVersion != ''">and fe_version = #{feVersion}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <insert id="save" parameterType="com.fairy.system.model.SysFeVersion">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            select last_insert_id()
+        </selectKey>
+        insert into sys_fe_version
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="feVersion != null">
+                fe_version,
+            </if>
+            <if test="createUser != null">
+                create_user,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="feVersion != null">
+                #{feVersion},
+            </if>
+            <if test="createUser != null">
+                #{createUser},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.fairy.system.model.SysFeVersion">
+        update sys_fe_version
+        <set>
+            <if test="id != null">`id` = #{id},</if>
+            <if test="feVersion != null">`fe_version` = #{feVersion},</if>
+            <if test="createUser != null">`create_user` = #{createUser},</if>
+            <if test="createTime != null">`create_time` = #{createTime},</if>
+            <if test="updateTime != null">`update_time` = #{updateTime},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+		delete from sys_fe_version where id = #{id}
+	</delete>
+
+</mapper>

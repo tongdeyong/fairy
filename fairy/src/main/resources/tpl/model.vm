@@ -1,0 +1,20 @@
+package ${packageName}.${module}.vo;
+
+import lombok.Data;
+
+#if($hasDate)
+import java.util.Date;
+#end
+
+@Data
+public class ${ClassName} {
+
+    #foreach($column in $columns)
+    /**
+     * $column.comment
+     */
+    private $column.type $column.attributeName;
+
+    #end
+}
+

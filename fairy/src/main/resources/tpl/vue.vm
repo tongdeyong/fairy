@@ -1,0 +1,172 @@
+<template>
+  <div class="app-container">
+    <div class="filter-container">
+      #foreach($column in $columns)
+      #if($column.attributeName!="id" && $column.type!="Date")
+      <el-input v-model="queryParam.$column.attributeName" placeholder="$column.comment" style="width: 200px;" class="filter-item" />
+      #end
+      #end
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-search" @click="search">
+        搜索
+      </el-button>
+      <el-button
+        class="filter-item"
+        style="margin-left: 10px;"
+        type="primary"
+        icon="el-icon-edit"
+        @click="createDialogShow = true"
+      >添加
+      </el-button>
+    </div>
+
+    <el-table
+      v-loading="loading"
+      border
+      fit
+      :data="tableData"
+      row-key="id"
+      highlight-current-row
+      style="width: 100%;"
+      :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+    >
+      >
+      #foreach($column in $columns)
+      <el-table-column label="$column.comment" prop="$column.attributeName" align="center" />
+      #end
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <template slot-scope="{row}">
+          <el-button type="primary" @click="edit(row)">编辑</el-button>
+          <el-button type="danger" @click="remove(row)">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <el-pagination :page-size="queryParam.pageSize" :current-page="queryParam.pageNum" :total="queryParam.total" />
+
+    <el-dialog :visible.sync="createDialogShow" :close-on-click-modal="false" destroy-on-close @open="openDialogCallBack" @close="closeDialogCallBack">
+      <el-form ref="form" :model="form" label-position="right" label-width="100px">
+        #foreach($column in $columns)
+        #if($column.attributeName!="id" && $column.type!="Date")
+        <el-form-item label="$column.comment">
+          <el-input :value="form.$column.attributeName" />
+        </el-form-item>
+        #end
+        #end
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="save">提交</el-button>
+      </div>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+import { list, remove, add, update } from '../../../api/${module}/${className}'
+
+export default {
+  data() {
+    return {
+      tableData: [],
+      loading: false,
+      queryParam: {
+        #foreach($column in $columns)
+        #if($column.attributeName!="id" && $column.type!="Date")
+        $column.attributeName:'',
+        #end
+        #end
+        pageNum: 1,
+        pageSize: 10,
+        total: 0
+      },
+      deptParentName: '',
+      createDialogShow: false,
+      form: {
+        #foreach($column in $columns)
+        #if($column.attributeName!="id" && $column.type!="Date")
+        $column.attributeName:'',
+        #end
+        #end
+      }
+    }
+  },
+  created() {
+    this.getTableData()
+  },
+  methods: {
+    getTableData() {
+      this.loading = true
+      list(this.queryParam).then(res => {
+        this.loading = false
+        if (res.data.status === 200) {
+          this.tableData = res.data.data
+        }
+      }).catch(error => {
+        this.loading = false
+        console.error(error)
+      })
+    },
+    search() {
+      this.queryParam.pageNum = 1
+      this.getTableData()
+    },
+    edit(row) {
+      this.form = row
+      this.createDialogShow = true
+    },
+    async remove(row) {
+      try {
+        const confirm = await this.$confirm('删除' + row.id + ', 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          showCancelButton: false,
+          type: 'warning'
+        })
+        if (confirm === 'confirm') {
+          let loading
+          try {
+            loading = this.$loading({ fullscreen: true })
+            const res = await remove(row)
+            loading.close()
+            if (res.data.status === 200) {
+              this.getTableData()
+            }
+          } catch (e) {
+            console.error(e)
+            loading.close()
+            this.$message({
+              type: 'error',
+              message: '删除失败'
+            })
+          }
+        }
+      } catch (e) {
+        console.log('取消删除')
+      }
+    },
+    async save() {
+      const loading = this.$loading({ fullscreen: true })
+      let res
+      try {
+        if (this.form.id) {
+          res = await update(this.form)
+        } else {
+          res = await add(this.form)
+        }
+        loading.close()
+        if (res.data.status === 200) {
+          this.$message({ type: 'success', message: this.form.id ? '更新成功' : '添加成功' })
+          this.createDialogShow = false
+          this.getTableData()
+        }
+      } catch (e) {
+        console.error(e)
+        loading.close()
+        this.$message({ type: 'error', message: '提交' })
+      }
+    }
+  }
+}
+</script>
+<style>
+
+</style>

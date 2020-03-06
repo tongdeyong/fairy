@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fairy.system.dao.UserDao">
+
+    <select id="findById" parameterType="java.lang.Integer" resultType="com.fairy.system.model.User">
+		select *
+		from sys_user
+		where id = #{value}
+	</select>
+
+    <select id="findByCondition" parameterType="com.fairy.system.vo.UserVO" resultType="com.fairy.system.model.User">
+        select *
+        from sys_user su
+        left join sys_user_dept sud on su.id = sud.user_id
+		left join sys_dept sd on sd.id = sud.dept_id
+        <where>
+            <if test="username != null and username != ''">and su.username LIKE CONCAT('%', #{username}, '%')</if>
+            <if test="name != null and name != ''">and su.name LIKE CONCAT('%', #{name}, '%')</if>
+            <if test="email != null and email != ''">and su.email = #{email}</if>
+            <if test="mobile != null and mobile != ''">and su.mobile = #{mobile}</if>
+            <if test="sex != null">and su.sex = #{sex}</if>
+            <if test="birth != null">and su.birth = #{birth}</if>
+            <if test="image != null and image != ''">and su.image = #{image}</if>
+            <if test="status != null">and su.status = #{status}</if>
+            <if test="deptId != null">and sud.dept_id = #{deptId}</if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.fairy.system.model.User">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            select last_insert_id()
+        </selectKey>
+        insert into sys_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="username != null">
+				username,
+			</if>
+			<if test="name != null">
+				`name`,
+			</if>
+			<if test="password != null">
+				`password`,
+			</if>
+			<if test="email != null">
+				email,
+			</if>
+			<if test="mobile != null">
+				mobile,
+			</if>
+			<if test="sex != null">
+				sex,
+			</if>
+			<if test="birth != null">
+				birth,
+			</if>
+			<if test="image != null">
+				image,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="username != null">
+				#{username},
+			</if>
+			<if test="name != null">
+				#{name},
+			</if>
+			<if test="password != null">
+				#{password},
+			</if>
+			<if test="email != null">
+				#{email},
+			</if>
+			<if test="mobile != null">
+				#{mobile},
+			</if>
+			<if test="sex != null">
+				#{sex},
+			</if>
+			<if test="birth != null">
+				#{birth},
+			</if>
+			<if test="image != null">
+				#{image},
+			</if>
+			<if test="status != null">
+				#{status},
+			</if>
+			<if test="createTime != null">
+				#{createTime},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime},
+			</if>
+		</trim>
+    </insert>
+
+    <update id="update" parameterType="com.fairy.system.model.User">
+        update sys_user
+        <set>
+            <if test="username != null and username != ''">`username` = #{username},</if>
+            <if test="name != null and name != ''">`name` = #{name},</if>
+            <if test="password != null and password != ''">`password` = #{password},</if>
+            <if test="email != null and email != ''">`email` = #{email},</if>
+            <if test="mobile != null and mobile != ''">`mobile` = #{mobile},</if>
+            <if test="status != null">`status` = #{status},</if>
+            <if test="sex != null">`sex` = #{sex},</if>
+            <if test="birth != null">`birth` = #{birth},</if>
+            <if test="image != null and image != ''">`image` = #{image},</if>
+            <if test="createTime != null">`create_time` = #{createTime},</if>
+            <if test="updateTime != null">`update_time` = #{updateTime},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+		delete from sys_user where id = #{id}
+	</delete>
+
+</mapper>

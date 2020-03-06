@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fairy.system.dao.DeptDao">
+
+	<select id="findById" parameterType="java.lang.Integer" resultType="com.fairy.system.model.Dept">
+		select *
+		from sys_dept
+		where id = #{id}
+	</select>
+
+	<select id="findByCondition" parameterType="com.fairy.system.vo.DeptVO" resultType="com.fairy.system.vo.DeptVO">
+		select *
+		from
+		sys_dept
+		<where>
+			<if test="id != null"> and id = #{id} </if>
+			<if test="parentId != null"> and parent_id = #{parentId} </if>
+			<if test="deptName != null and deptName != ''"> and `dept_name` = #{deptName} </if>
+			<if test="orderNum != null"> and order_num = #{orderNum} </if>
+			<if test="status != null"> and status = #{status} </if>
+			<if test="createTime != null"> and create_time = #{createTime} </if>
+			<if test="updateTime != null"> and update_time = #{updateTime} </if>
+		</where>
+	</select>
+
+
+	<insert id="save" parameterType="com.fairy.system.model.Dept">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			select last_insert_id()
+		</selectKey>
+		insert into sys_dept
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="parentId != null">
+				parent_id,
+			</if>
+			<if test="deptName != null">
+				`dept_name`,
+			</if>
+			<if test="orderNum != null">
+				`order_num`,
+			</if>
+			<if test="status != null">
+				`status`,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="createTime != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="parentId != null">
+				#{parentId},
+			</if>
+			<if test="deptName != null">
+				#{deptName},
+			</if>
+			<if test="orderNum != null">
+				#{orderNum},
+			</if>
+			<if test="status != null">
+				#{status},
+			</if>
+			<if test="createTime != null">
+				#{createTime},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="update" parameterType="com.fairy.system.model.Dept">
+		update sys_dept
+		<set>
+			<if test="parentId != null">`parent_id` = #{parentId}, </if>
+			<if test="deptName != null and deptName != ''">`dept_name` = #{deptName}, </if>
+			<if test="orderNum != null">`order_num` = #{orderNum}, </if>
+			<if test="status != null">`status` = #{status},</if>
+			<if test="createTime != null">`create_time` = #{createTime},</if>
+			<if test="updateTime != null">`update_time` = #{updateTime},</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteById" parameterType="java.lang.Integer">
+		delete from sys_dept where id = #{id}
+	</delete>
+</mapper>

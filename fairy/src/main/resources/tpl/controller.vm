@@ -1,0 +1,80 @@
+package ${packageName}.${module}.controller;
+
+import com.github.pagehelper.Page;
+import ${packageName}.common.vo.Result;
+import ${packageName}.${module}.vo.${ClassName}VO;
+import ${packageName}.${module}.model.${ClassName};
+import ${packageName}.${module}.service.${ClassName}Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@Slf4j
+@RequestMapping("/${module}/${className}")
+public class ${ClassName}Controller {
+
+    @Autowired
+    private ${ClassName}Service ${className}Service;
+
+    @GetMapping("/list")
+    public Result getPageList(${ClassName}VO ${className}VO) {
+        try {
+            List<${ClassName}> ${className}List = ${className}Service.findByCondition(${className}VO);
+            if (${className}List instanceof Page) {
+                Page page = (Page) ${className}List;
+                return Result.ok(${className}List, page.getPageNum(), page.getPageSize(), (int) page.getTotal());
+            }
+            return Result.ok(${className}List);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.error(e.getMessage());
+        }
+    }
+
+    @GetMapping("/all-list")
+    public Result getAllList(${ClassName}VO ${className}VO) {
+        try {
+            return Result.ok(${className}Service.findAll(${className}VO));
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.error(e.getMessage());
+        }
+    }
+
+    @PostMapping("/save")
+    public Result save(@RequestBody ${ClassName} ${className}) {
+        try {
+            ${className}Service.save(${className});
+            return Result.ok();
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.error(e.getMessage());
+        }
+    }
+
+    @RequestMapping("/update")
+    public Result update(@RequestBody ${ClassName} ${className}) {
+        try {
+            ${className}Service.update(${className});
+            return Result.ok();
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.error(e.getMessage());
+        }
+    }
+
+    @PostMapping("/delete/{id}")
+    public Result remove(@PathVariable Integer id) {
+        try {
+            ${className}Service.deleteById(id);
+            return Result.ok();
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Result.error(e.getMessage());
+        }
+    }
+}
+
