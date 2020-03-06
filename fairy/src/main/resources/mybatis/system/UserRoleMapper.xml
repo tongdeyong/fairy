@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fairy.system.dao.UserRoleDao">
+
+	<select id="findById" parameterType="java.lang.Integer" resultType="com.fairy.system.model.UserRole">
+		select *
+		from sys_user_role
+		where id = #{id}
+	</select>
+
+	<select id="findByCondition" resultType="com.fairy.system.model.UserRole">
+		select *
+		from
+		sys_user_role
+		<where>
+			<if test="id != null">and id = #{id}</if>
+			<if test="roleId != null">and role_id = #{roleId}</if>
+			<if test="userId != null">and `user_id` = #{userId}</if>
+			<if test="createTime != null">and create_time = #{createTime}</if>
+			<if test="updateTime != null">and update_time = #{updateTime}</if>
+		</where>
+	</select>
+
+
+	<insert id="save" parameterType="com.fairy.system.model.UserRole">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			select last_insert_id()
+		</selectKey>
+		insert into sys_user_role
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="roleId != null">
+				role_id,
+			</if>
+			<if test="userId != null">
+				`user_id`,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="createTime != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="roleId != null">
+				#{roleId},
+			</if>
+			<if test="userId != null">
+				#{userId},
+			</if>
+			<if test="createTime != null">
+				#{createTime},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="update" parameterType="com.fairy.system.model.UserRole">
+		update sys_user_role
+		<set>
+			<if test="roleId != null">role_id = #{roleId},</if>
+			<if test="userId != null">`user_id` = #{userId},</if>
+			<if test="createTime != null">`create_time` = #{createTime},</if>
+			<if test="updateTime != null">`update_time` = #{updateTime},</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteById" parameterType="java.lang.Integer">
+		delete from sys_user_role where id = #{id}
+	</delete>
+
+
+</mapper>

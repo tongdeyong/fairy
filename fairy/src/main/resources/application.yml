@@ -1,0 +1,35 @@
+server:
+  port: 9091
+spring:
+  profiles:
+    active: dev
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://localhost:3306/fairy?characterEncoding=utf8
+    username: root
+    password: root
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  thymeleaf:
+    prefix: classpath:/templates/
+    mode: HTML5
+    suffix: .html
+mybatis:
+  mapper-locations: classpath:mybatis/**/*.xml
+  type-aliases-package: com.fairy.**
+  configuration:
+    map-underscore-to-camel-case: true
+logging:
+  level:
+    com.xlian: DEBUG
+static-resource:
+  path: /work/fe/
+
+
+
